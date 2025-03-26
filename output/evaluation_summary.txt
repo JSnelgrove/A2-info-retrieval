@@ -1,5 +1,5 @@
 Total unique terms: 19767
-Sample 100 Tokens: ['unnam', 'clearest', 'internalis', 'nanoscopi', 'glkgen', 'abscess', 'ej', 'mellonella', 'pyloru', 'prejud', 'protoarray', 'ckid', 'inocul', 'proc', 'ucb', 'fever', 'dpx', 'add', 'pearson', 'lace', 'distribut', 'bca', 'cryptotheca', 'apoenzym', 'ponv', 'karnofski', 'proteinas', 'inspiratori', 'ckr', 'cirrhosi', 'sulphid', 'arthropathi', 'restag', 'kdrlow', 'buri', 'acg', 'sbcc', 'resembl', 'audiovisu', 'forgo', 'tetan', 'intertumor', 'nonmix', 'snail', 'passerin', 'landscap', 'heggelia', 'seclud', 'sfk', 'hemolysin', 'impend', 'alloxan', 'csi', 'ivf', 'capitol', 'naturalist', 'antiretrovir', 'rerio', 'dapson', 'photosensori', 'nlacz', 'aalf', 'streptomyc', 'unpassag', 'quaternari', 'pflueger', 'indinavir', 'coolair', 'nankana', 'fasta', 'sarcophaga', 'safer', 'subsurfac', 'langerhan', 'tertiari', 'pomb', 'carbonyl', 'crash', 'intraderm', 'fluorophor', 'outreach', 'consanguin', 'dehydrocholesterol', 'smoothen', 'listeria', 'biomass', 'atopi', 'gra', 'nestl', 'transrepress', 'betaklotho', 'transles', 'hbegf', 'anal', 'apolipoprotein', 'guerbet', 'pyridyl', 'googl', 'download', 'corona']
+Sample 100 Tokens: ['friendship', 'aha', 'stimulatori', 'olymp', 'gem', 'hla', 'laurent', 'ohnolog', 'nitag', 'fura', 'societ', 'gvhd', 'latenc', 'zvad', 'cdcc', 'chemoinformat', 'germfre', 'anaemia', 'arm', 'gase', 'scheme', 'depot', 'seddighzadeh', 'alopecia', 'ghrelinoma', 'antigluconeogen', 'carcinoma', 'heteroscedast', 'spoiiil', 'isoelectr', 'isogen', 'reorgan', 'plastic', 'bacitracin', 'catalys', 'attent', 'therapist', 'trinucleotid', 'schwann', 'phagocytosi', 'satisfact', 'overt', 'haplodefici', 'groundwat', 'aptima', 'equidist', 'msu', 'nonrepeat', 'mitogen', 'monophosph', 'chronicl', 'aom', 'radiosurgeri', 'antisteatot', 'titer', 'dhmr', 'batf', 'tetan', 'diderot', 'admit', 'urolog', 'agenda', 'nephric', 'audiometr', 'codein', 'avn', 'overhung', 'brm', 'thiazid', 'micromechan', 'ductal', 'peroxidas', 'interict', 'phosphorylas', 'reclam', 'protrud', 'unit', 'ketamin', 'tax', 'waterproof', 'inactiv', 'imag', 'wisepil', 'differenti', 'penetratin', 'checkpoint', 'acidotrop', 'architecton', 'nanoscopi', 'second', 'chlor', 'nephroprotect', 'woodchuck', 'nonteach', 'mko', 'podoplanin', 'antioxidas', 'prognost', 'cmac', 'msv']
 
 First 10 Results for Queries 1 & 3:
 1 Q0 21257564 1 9.7562 BM25+QueryExpansion
@@ -24,8 +24,8 @@ First 10 Results for Queries 1 & 3:
 3 Q0 43334921 10 21.3640 BM25+QueryExpansion
 
 Evaluation Results:
-map: 0.5717
+recall_100: 0.8850
 recall_20: 0.8171
 ndcg: 0.6446
-recall_100: 0.8850
 P_10: 0.0833
+map: 0.5717
