@@ -13,7 +13,7 @@ def run_script(script_name):
         print("\nERROR in", script_name, ":\n", stderr_output)
 
 if __name__ == "__main__":
-    scripts = ["preprocess.py", "invertedIndex.py", "retrievalAndRanking.py", "evaluate.py"]
+    scripts = ["preprocess.py", "invertedIndex.py", "retrievalAndRanking.py", "doc2vec_rerank.py","evaluate.py"]
 
     for script in scripts:
         run_script(script)

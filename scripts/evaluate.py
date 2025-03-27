@@ -72,7 +72,7 @@ if __name__ == "__main__":
     # File paths
     preprocessed_corpus_file = "../output/preprocessed_corpus.json"
     baseline_results_file = "../output/Results.txt"
-    doc2vec_results_file = "../output/Results_doc2vec.txt"
+    doc2vec_results_file = "../output/Results_hybrid.txt"
     relevance_file = "../scifact/qrels/test.tsv"
 
     # Compute vocabulary size and sample 100 tokens
