@@ -87,7 +87,11 @@ def main():
     ])
 
     if llm_type == 0:
-        print("\n▶️ Running MiniLM SHORT (fast)...")
+        print("\n⚠️  WARNING: You have chosen the FAST version (top 25 docs)")
+        print("   This version may have lower Recall@100 and Precision compared to the FULL version")
+        print("   because it reranks fewer documents. Consider using the FULL version")
+        print("   for better recall and precision metrics.\n")
+        print("▶️ Running MiniLM SHORT (fast)...")
         run_script(scripts["minilm_short"])
     else:
         print("\n▶️ Running MiniLM LONG (extended)...")
@@ -106,12 +110,23 @@ def main():
         else:
             table.append([label.upper()] + ["N/A"] * 5)
 
-    # Calculate improvements
+    # Calculate improvements for both DOC2VEC and MINILM
     if a1_scores:
-        improvements = calculate_improvement(a1_scores, load_scores(results["minilm"]))
-        if improvements:
-            improvement_row = ["IMPROVEMENT"] + [f"{improvements.get(metric, 0):+.1f}%" for metric in ["map", "P_10", "recall_20", "recall_100", "ndcg"]]
-            table.append(improvement_row)
+        # Calculate DOC2VEC improvements
+        doc2vec_scores = load_scores(results["doc2vec"])
+        if doc2vec_scores:
+            doc2vec_improvements = calculate_improvement(a1_scores, doc2vec_scores)
+            if doc2vec_improvements:
+                doc2vec_row = ["DOC2VEC IMPROVEMENT"] + [f"{doc2vec_improvements.get(metric, 0):+.1f}%" for metric in ["map", "P_10", "recall_20", "recall_100", "ndcg"]]
+                table.append(doc2vec_row)
+
+        # Calculate MINILM improvements
+        minilm_scores = load_scores(results["minilm"])
+        if minilm_scores:
+            minilm_improvements = calculate_improvement(a1_scores, minilm_scores)
+            if minilm_improvements:
+                minilm_row = ["MINILM IMPROVEMENT"] + [f"{minilm_improvements.get(metric, 0):+.1f}%" for metric in ["map", "P_10", "recall_20", "recall_100", "ndcg"]]
+                table.append(minilm_row)
 
     # Display table
     print("\n📊 Final Evaluation Comparison:")
