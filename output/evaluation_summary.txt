@@ -1,7 +1,7 @@
 Total unique terms: 19767
-Sample 100 Tokens: ['friendship', 'aha', 'stimulatori', 'olymp', 'gem', 'hla', 'laurent', 'ohnolog', 'nitag', 'fura', 'societ', 'gvhd', 'latenc', 'zvad', 'cdcc', 'chemoinformat', 'germfre', 'anaemia', 'arm', 'gase', 'scheme', 'depot', 'seddighzadeh', 'alopecia', 'ghrelinoma', 'antigluconeogen', 'carcinoma', 'heteroscedast', 'spoiiil', 'isoelectr', 'isogen', 'reorgan', 'plastic', 'bacitracin', 'catalys', 'attent', 'therapist', 'trinucleotid', 'schwann', 'phagocytosi', 'satisfact', 'overt', 'haplodefici', 'groundwat', 'aptima', 'equidist', 'msu', 'nonrepeat', 'mitogen', 'monophosph', 'chronicl', 'aom', 'radiosurgeri', 'antisteatot', 'titer', 'dhmr', 'batf', 'tetan', 'diderot', 'admit', 'urolog', 'agenda', 'nephric', 'audiometr', 'codein', 'avn', 'overhung', 'brm', 'thiazid', 'micromechan', 'ductal', 'peroxidas', 'interict', 'phosphorylas', 'reclam', 'protrud', 'unit', 'ketamin', 'tax', 'waterproof', 'inactiv', 'imag', 'wisepil', 'differenti', 'penetratin', 'checkpoint', 'acidotrop', 'architecton', 'nanoscopi', 'second', 'chlor', 'nephroprotect', 'woodchuck', 'nonteach', 'mko', 'podoplanin', 'antioxidas', 'prognost', 'cmac', 'msv']
+Sample 100 Tokens: ['micrometr', 'pymav', 'underscor', 'cryoprotect', 'recb', 'cysteinylglycin', 'peroxynitrit', 'dca', 'thiourea', 'blueprint', 'pmg', 'nsclc', 'sno', 'heptad', 'dbx', 'renoprotect', 'tfii', 'estru', 'tnfrsf', 'lsu', 'hplc', 'neuroglycopen', 'durn', 'imatinib', 'underlin', 'preeclampt', 'kindr', 'degener', 'pegyl', 'hra', 'tfh', 'glutam', 'rqk', 'agric', 'supramolecular', 'decrepitud', 'gamp', 'ygibc', 'ribosyl', 'microinject', 'aarp', 'clinicaltrialsgov', 'trn', 'cyclo', 'withdrawn', 'vo', 'lytic', 'myotom', 'ursodeoxychol', 'inadequ', 'premalign', 'unvaccin', 'raph', 'sausag', 'switch', 'encod', 'norri', 'catabasi', 'august', 'ipsc', 'dialysi', 'shift', 'corneocyt', 'klf', 'soma', 'belatacept', 'gap', 'microgram', 'safeti', 'ecw', 'malay', 'nidu', 'canada', 'emul', 'intralymphat', 'fitc', 'acidophil', 'monoterpen', 'bx', 'circadiom', 'town', 'hyperresect', 'free', 'hydroxysteroid', 'unimpregn', 'entecavir', 'ssti', 'bridg', 'atria', 'minichromosom', 'manipul', 'polyethyleneimin', 'bcap', 'elabor', 'sishencong', 'reproduct', 'nih', 'rdrp', 'heartburn', 'hepatotox']
 
-First 10 Results for Queries 1 & 3:
+Baseline Results (First 10 for Queries 1 & 3):
 1 Q0 21257564 1 9.7562 BM25+QueryExpansion
 1 Q0 18953920 2 8.3847 BM25+QueryExpansion
 1 Q0 13231899 3 7.9082 BM25+QueryExpansion
@@ -23,9 +23,38 @@ First 10 Results for Queries 1 & 3:
 3 Q0 19058822 9 22.2002 BM25+QueryExpansion
 3 Q0 43334921 10 21.3640 BM25+QueryExpansion
 
-Evaluation Results:
-recall_100: 0.8850
+Doc2Vec Results (First 10 for Queries 1 & 3):
+1 Q0 21257564 1 0.7486 Doc2Vec
+1 Q0 18953920 2 0.7033 Doc2Vec
+1 Q0 36480032 3 0.6334 Doc2Vec
+1 Q0 7581911 4 0.6075 Doc2Vec
+1 Q0 21456232 5 0.5416 Doc2Vec
+1 Q0 37949139 6 0.5336 Doc2Vec
+1 Q0 4435369 7 0.5249 Doc2Vec
+1 Q0 3845894 8 0.5090 Doc2Vec
+1 Q0 17388232 9 0.5003 Doc2Vec
+1 Q0 20155713 10 0.4877 Doc2Vec
+3 Q0 2739854 1 0.8235 Doc2Vec
+3 Q0 4414547 2 0.7818 Doc2Vec
+3 Q0 4632921 3 0.7763 Doc2Vec
+3 Q0 23389795 4 0.7050 Doc2Vec
+3 Q0 4378885 5 0.6978 Doc2Vec
+3 Q0 1067605 6 0.6433 Doc2Vec
+3 Q0 2107238 7 0.6172 Doc2Vec
+3 Q0 461550 8 0.5624 Doc2Vec
+3 Q0 13519661 9 0.5605 Doc2Vec
+3 Q0 14717500 10 0.5489 Doc2Vec
+
+Baseline Evaluation Results:
 recall_20: 0.8171
-ndcg: 0.6446
 P_10: 0.0833
+ndcg: 0.6446
 map: 0.5717
+recall_100: 0.8850
+
+Doc2Vec Evaluation Results:
+recall_20: 0.8049
+P_10: 0.0823
+ndcg: 0.6385
+map: 0.5629
+recall_100: 0.8850

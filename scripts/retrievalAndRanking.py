@@ -79,7 +79,7 @@ if __name__ == "__main__":
     index_file = "../output/invertedIndex.json"
     query_file = "../scifact/queries.jsonl"
     stopwords_file = "../stopwords.txt"
-    output_file = "../output/Results.txt"
+    output_file = "../output/Results_hybrid.txt"
 
     # Load resources
     inverted_index, doc_lengths, idf_values = load_inverted_index(index_file)
@@ -94,4 +94,4 @@ if __name__ == "__main__":
             for rank, (doc_id, score) in enumerate(ranked_results[:100], start=1):
                 f.write(f"{query['_id']} Q0 {doc_id} {rank} {score:.4f} BM25+QueryExpansion\n")
 
-    print("Retrieval and ranking completed. Results saved to Results.txt.")
+    print("Retrieval and ranking completed. Results saved to Results_hybrid.txt.")

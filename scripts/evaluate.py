@@ -69,23 +69,25 @@ def evaluate_results(relevance_file, results_file):
     return average_scores
 
 if __name__ == "__main__":
-    # File paths
+    # Count unique terms in corpus
     preprocessed_corpus_file = "../output/preprocessed_corpus.json"
-    baseline_results_file = "../output/Results.txt"
-    doc2vec_results_file = "../output/Results_hybrid.txt"
-    relevance_file = "../scifact/qrels/test.tsv"
-
-    # Compute vocabulary size and sample 100 tokens
-    vocab_size, sample_tokens = count_unique_terms(preprocessed_corpus_file)
-    print(f"Total unique terms in the corpus: {vocab_size}")
+    num_terms, sample_tokens = count_unique_terms(preprocessed_corpus_file)
+    print(f"Total unique terms in the corpus: {num_terms}")
     print(f"Sample 100 Tokens: {sample_tokens}")
 
-    # Optionally, extract and display top results for a couple of queries (e.g., "1" and "3")
+    # File paths
+    baseline_results_file = "../output/Results_hybrid.txt"
+    doc2vec_results_file = "../output/Results_doc2vec.txt"
+    relevance_file = "../scifact/qrels/test.tsv"
+
+    # Extract top results for specific queries
     top_results_baseline = extract_top_results(baseline_results_file, {"1", "3"}, top_n=10)
     top_results_doc2vec = extract_top_results(doc2vec_results_file, {"1", "3"}, top_n=10)
+
     print("\nFirst 10 Baseline Results for Queries 1 & 3:")
     for result in top_results_baseline:
         print(result)
+
     print("\nFirst 10 Doc2Vec Results for Queries 1 & 3:")
     for result in top_results_doc2vec:
         print(result)
@@ -94,17 +96,9 @@ if __name__ == "__main__":
     evaluation_baseline = evaluate_results(relevance_file, baseline_results_file)
     evaluation_doc2vec = evaluate_results(relevance_file, doc2vec_results_file)
 
-    print("\nBaseline Evaluation Results:")
-    for metric, score in evaluation_baseline.items():
-        print(f"{metric}: {score:.4f}")
-
-    print("\nDoc2Vec Evaluation Results:")
-    for metric, score in evaluation_doc2vec.items():
-        print(f"{metric}: {score:.4f}")
-
     # Save combined evaluation summary to a file
     with open("../output/evaluation_summary.txt", "w") as f:
-        f.write(f"Total unique terms: {vocab_size}\n")
+        f.write(f"Total unique terms: {num_terms}\n")
         f.write(f"Sample 100 Tokens: {sample_tokens}\n\n")
         f.write("Baseline Results (First 10 for Queries 1 & 3):\n")
         for result in top_results_baseline:
