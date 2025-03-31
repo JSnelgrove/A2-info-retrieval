@@ -4,17 +4,22 @@ from tabulate import tabulate
 
 # Paths
 scripts = {
-    "A1": ["preprocess.py", "invertedIndex.py", "retrievalAndRanking.py", "evaluate.py"],
-    "doc2vec": ["doc2vec_reranker.py"],
-    "minilm_short": ["neural_rerank_minilm.py", "--top_k=25"],
-    "minilm_long": ["neural_rerank_minilm.py", "--top_k=100"]
+    "A1": [
+        "A1_BM25/scripts/preprocess.py",
+        "A1_BM25/scripts/invertedIndex.py",
+        "A1_BM25/scripts/retrievalAndRanking.py",
+        "A1_BM25/scripts/evaluate.py"
+    ],
+    "doc2vec": ["A2_Neural/doc2vec/scripts/doc2vec_reranker.py"],
+    "minilm_short": ["A2_Neural/minilm/scripts/neural_rerank_minilm.py", "--top_k=25"],
+    "minilm_long": ["A2_Neural/minilm/scripts/neural_rerank_minilm.py", "--top_k=100"]
 }
 
 # Result files and tags
 results = {
-    "A1": "../output/evaluation_summary.txt",
-    "doc2vec": "../output/evaluation_results_doc2vec.txt",
-    "minilm": "../output/evaluation_results_minilm.txt"
+    "A1": "A1_BM25/output/evaluation_summary.txt",
+    "doc2vec": "A2_Neural/doc2vec/output/evaluation_results_doc2vec.txt",
+    "minilm": "A2_Neural/minilm/output/evaluation_results_minilm.txt"
 }
 
 # Prompt
