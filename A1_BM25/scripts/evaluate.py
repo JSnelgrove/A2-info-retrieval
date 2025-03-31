@@ -2,6 +2,10 @@ import json
 import pytrec_eval
 import os
 
+# Setup paths
+root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+a1_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 def count_unique_terms(preprocessed_corpus_file):
     """Counts the total number of unique terms in the corpus."""
     unique_terms = set()
@@ -69,35 +73,34 @@ def evaluate_results(relevance_file, results_file):
     return average_scores
 
 if __name__ == "__main__":
-    # Setup paths
-    root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    a1_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     # Count unique terms in corpus
-    preprocessed_corpus_file = "../output/preprocessed_corpus.json"
+    preprocessed_corpus_file = os.path.join(a1_dir, "output/preprocessed_corpus.json")
     num_terms, sample_tokens = count_unique_terms(preprocessed_corpus_file)
     print(f"Total unique terms in the corpus: {num_terms}")
     print(f"Sample 100 Tokens: {sample_tokens}")
 
     # File paths
-    baseline_results_file = "../output/Results_hybrid.txt"
-    doc2vec_results_file = "../output/Results_doc2vec.txt"
-    relevance_file = "../scifact/qrels/test.tsv"
+    baseline_results_file = os.path.join(a1_dir, "output/Results_hybrid.txt")
+    doc2vec_results_file = os.path.join(a1_dir, "output/Results_doc2vec.txt")
+    relevance_file = os.path.join(root_dir, "data/scifact/qrels/test.tsv")
 
     # Extract top results for specific queries
     top_results_baseline = extract_top_results(baseline_results_file, {"1", "3"}, top_n=10)
-    top_results_doc2vec = extract_top_results(doc2vec_results_file, {"1", "3"}, top_n=10)
-
     print("\nFirst 10 Baseline Results for Queries 1 & 3:")
     for result in top_results_baseline:
         print(result)
 
-    print("\nFirst 10 Doc2Vec Results for Queries 1 & 3:")
-    for result in top_results_doc2vec:
-        print(result)
+    # Only try to process doc2vec results if the file exists
+    if os.path.exists(doc2vec_results_file):
+        top_results_doc2vec = extract_top_results(doc2vec_results_file, {"1", "3"}, top_n=10)
+        print("\nFirst 10 Doc2Vec Results for Queries 1 & 3:")
+        for result in top_results_doc2vec:
+            print(result)
+    else:
+        print("\nDoc2Vec results not yet available. Skipping doc2vec evaluation.")
 
-    # Evaluate both methods
+    # Evaluate baseline method
     evaluation_baseline = evaluate_results(relevance_file, baseline_results_file)
-    evaluation_doc2vec = evaluate_results(relevance_file, doc2vec_results_file)
 
     # Save combined evaluation summary to a file
     with open(os.path.join(a1_dir, "output/evaluation_summary.txt"), "w") as f:
@@ -106,14 +109,12 @@ if __name__ == "__main__":
         f.write("Baseline Results (First 10 for Queries 1 & 3):\n")
         for result in top_results_baseline:
             f.write(result + "\n")
-        f.write("\nDoc2Vec Results (First 10 for Queries 1 & 3):\n")
-        for result in top_results_doc2vec:
-            f.write(result + "\n")
+        if os.path.exists(doc2vec_results_file):
+            f.write("\nDoc2Vec Results (First 10 for Queries 1 & 3):\n")
+            for result in top_results_doc2vec:
+                f.write(result + "\n")
         f.write("\nBaseline Evaluation Results:\n")
         for metric, score in evaluation_baseline.items():
-            f.write(f"{metric}: {score:.4f}\n")
-        f.write("\nDoc2Vec Evaluation Results:\n")
-        for metric, score in evaluation_doc2vec.items():
             f.write(f"{metric}: {score:.4f}\n")
 
     print("\nEvaluation summary saved to evaluation_summary.txt.")

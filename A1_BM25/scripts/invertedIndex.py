@@ -1,5 +1,6 @@
 import json
 import math
+import os
 from preprocess import preprocess_text, load_stopwords  # Import from preprocess.py
 
 def generate_inverted_index(input_file, output_file, stopwords_file):
