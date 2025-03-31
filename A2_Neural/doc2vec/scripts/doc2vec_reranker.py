@@ -24,6 +24,9 @@ GROUND_TRUTH_FILE = os.path.join(root_dir, "data/scifact/qrels/test.tsv")
 ALPHA = 0.5
 
 def load_corpus(file_path):
+    print(f"Loading corpus from: {file_path}")  # Debug print
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"Corpus file not found at: {file_path}")
     tagged_docs = []
     with open(file_path, "r", encoding="utf8") as f:
         for line in f:
@@ -115,7 +118,8 @@ def evaluate_results(ground_truth_file, result_file, output_eval_file):
 
 if __name__ == "__main__":
     # Setup paths
-    root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
+    current_dir = os.getcwd()  # Get current working directory
+    root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
     a1_dir = os.path.join(root_dir, "A1_BM25")
     doc2vec_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -127,6 +131,11 @@ if __name__ == "__main__":
     DOC2VEC_RESULTS_FILE = os.path.join(doc2vec_dir, "output/Results_doc2vec.txt")
     EVAL_OUTPUT_FILE = os.path.join(doc2vec_dir, "output/evaluation_results_doc2vec.txt")
     GROUND_TRUTH_FILE = os.path.join(root_dir, "data/scifact/qrels/test.tsv")
+
+    print(f"Current directory: {current_dir}")  # Debug print
+    print(f"Root directory: {root_dir}")  # Debug print
+    print(f"Looking for corpus at: {CORPUS_FILE}")  # Debug print
+    print(f"File exists: {os.path.exists(CORPUS_FILE)}")  # Debug print
 
     print("📥 Loading corpus...")
     tagged_documents = load_corpus(CORPUS_FILE)

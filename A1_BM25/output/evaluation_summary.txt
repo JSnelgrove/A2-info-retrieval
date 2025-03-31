@@ -1,5 +1,5 @@
 Total unique terms: 19767
-Sample 100 Tokens: ['dietitian', 'participatori', 'pain', 'chelicer', 'outweight', 'midupp', 'offenc', 'bombyx', 'blastogenesi', 'polyplex', 'salutari', 'zinc', 'dihydroxyflavon', 'interquartil', 'splenic', 'proc', 'visual', 'pectori', 'topolog', 'ornithin', 'gliogenesi', 'scene', 'cage', 'anglia', 'adtl', 'acetylas', 'quail', 'formin', 'innumer', 'pmen', 'univari', 'threefourth', 'ischaemia', 'grind', 'arcto', 'formylcytosin', 'symptom', 'lobectomi', 'desumoyl', 'microscop', 'allergen', 'minipool', 'notifi', 'funnel', 'endoribonucleas', 'waterlog', 'inadvert', 'concord', 'gossypium', 'gynecolog', 'bacteriostat', 'cacgtg', 'upfront', 'rorbeta', 'eastern', 'biopsychosoci', 'allo', 'haematopoiet', 'heterotyp', 'cystin', 'anophel', 'disp', 'crinkl', 'wynn', 'papanicola', 'pluripotenti', 'liposom', 'histopatholog', 'unsur', 'dichotomi', 'rune', 'aimsour', 'shigella', 'gamma', 'tramadol', 'ribulos', 'basilar', 'tam', 'downstream', 'ursu', 'mef', 'egf', 'ganciclovir', 'cytolysi', 'ecno', 'bedtool', 'misinterpret', 'synergi', 'dyslipidaemia', 'ssm', 'garner', 'fourthli', 'prompt', 'micronucleu', 'basement', 'sydney', 'cle', 'hilar', 'phenylethanolamin', 'termini']
+Sample 100 Tokens: ['trifluoromethoxyphenylhydrazon', 'gabones', 'adenosylmethionin', 'unemploy', 'panicl', 'thosea', 'chlorogen', 'rbl', 'mod', 'disinhibit', 'peritumor', 'overweight', 'nitrosothiol', 'coinhibit', 'alloreplet', 'qualit', 'unmethyl', 'metallo', 'preputi', 'transamid', 'underdiagnos', 'cartograph', 'barcod', 'bodian', 'risch', 'anteroposterior', 'arthroscop', 'cort', 'northerli', 'match', 'substrat', 'hpode', 'polysomnographi', 'polycomb', 'mpr', 'mononucleotid', 'hbv', 'rtog', 'invest', 'pierson', 'kindr', 'overlook', 'studi', 'carr', 'hiatal', 'pkb', 'ciap', 'phenylacetamido', 'cultur', 'antigliadin', 'temozolomid', 'fosmid', 'ghrelinoma', 'pgc', 'gmp', 'adaptor', 'wilm', 'ltb', 'lcr', 'campus', 'overst', 'hypogammaglobulinemia', 'husband', 'ifit', 'exopeptidas', 'numblik', 'kynuren', 'biopsycholog', 'mastiti', 'diego', 'breakthrough', 'variant', 'lymphopoiesi', 'art', 'bengal', 'clem', 'repeat', 'cellsrecruit', 'etiopatholog', 'brompton', 'thermoregulatori', 'atezolizumab', 'issu', 'bmrcd', 'rhinovirus', 'necessit', 'unevenli', 'vasculoprotect', 'startl', 'paid', 'anthropogen', 'phosphatidylinositol', 'concerta', 'modifc', 'vincristin', 'propylthiouracil', 'lentibulariacea', 'purkinj', 'scald', 'hypogonad']
 
 Baseline Results (First 10 for Queries 1 & 3):
 1 Q0 21257564 1 9.7562 BM25+QueryExpansion
@@ -23,38 +23,9 @@ Baseline Results (First 10 for Queries 1 & 3):
 3 Q0 19058822 9 22.2002 BM25+QueryExpansion
 3 Q0 43334921 10 21.3640 BM25+QueryExpansion
 
-Doc2Vec Results (First 10 for Queries 1 & 3):
-1 Q0 21257564 1 0.7461 Doc2Vec
-1 Q0 18953920 2 0.6984 Doc2Vec
-1 Q0 36480032 3 0.6329 Doc2Vec
-1 Q0 7581911 4 0.6091 Doc2Vec
-1 Q0 21456232 5 0.5358 Doc2Vec
-1 Q0 37949139 6 0.5308 Doc2Vec
-1 Q0 4435369 7 0.5196 Doc2Vec
-1 Q0 3845894 8 0.5048 Doc2Vec
-1 Q0 17388232 9 0.5003 Doc2Vec
-1 Q0 20155713 10 0.4877 Doc2Vec
-3 Q0 2739854 1 0.8216 Doc2Vec
-3 Q0 4414547 2 0.7805 Doc2Vec
-3 Q0 4632921 3 0.7754 Doc2Vec
-3 Q0 23389795 4 0.7059 Doc2Vec
-3 Q0 4378885 5 0.6962 Doc2Vec
-3 Q0 1067605 6 0.6433 Doc2Vec
-3 Q0 2107238 7 0.6157 Doc2Vec
-3 Q0 461550 8 0.5632 Doc2Vec
-3 Q0 13519661 9 0.5607 Doc2Vec
-3 Q0 14717500 10 0.5452 Doc2Vec
-
 Baseline Evaluation Results:
-map: 0.5717
-recall_100: 0.8850
 ndcg: 0.6446
+map: 0.5717
 recall_20: 0.8171
-P_10: 0.0833
-
-Doc2Vec Evaluation Results:
-map: 0.5621
 recall_100: 0.8850
-ndcg: 0.6379
-recall_20: 0.8049
-P_10: 0.0820
+P_10: 0.0833
