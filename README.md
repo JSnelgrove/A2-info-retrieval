@@ -59,6 +59,66 @@ The system produces a **ranked list of documents** for each query and outputs re
    wsl
    python3 pipeline_runner.py
    ```
+Output of the pipeline: 
+==================================================
+🚀 A2 Information Retrieval Pipeline
+==================================================
+
+What do you want to run?
+1. Run A1 (BM25) + A2 (doc2vec & LLM)
+2. Run only A2 (doc2vec & LLM)
+Enter your choice: 1
+
+==================================================
+📊 Running Assignment 1 (BM25)
+==================================================
+
+▶️ Preprocessing corpus...
+✅ Corpus preprocessed
+ℹ️ Output: A1_BM25/output/preprocessed_corpus.json
+
+▶️ Building inverted index...
+✅ Inverted index created
+ℹ️ Output: A1_BM25/output/invertedIndex.json
+
+[...]
+
+Choose which LLM reranker to run:
+1. MiniLM (FAST – top 25 docs)
+2. MiniLM (FULL – top 100 docs)
+Enter your choice: 1
+
+⚠️ WARNING: You have chosen the FAST version (top 25 docs)
+⚠️ This version may have lower Recall@100 and Precision compared to the FULL version
+⚠️ because it reranks fewer documents. Consider using the FULL version
+⚠️ for better recall and precision metrics.
+
+ℹ️ Running FAST version (top 25 docs)
+▶️ Running MiniLM reranker...
+✅ MiniLM reranking completed
+ℹ️ Output: A2_Neural/minilm/output/Results_minilm.txt
+ℹ️ Evaluation: A2_Neural/minilm/output/evaluation_results_minilm.txt
+
++------------------+--------+--------+------------+-------------+--------+
+| System           | MAP    | P@10   | Recall@20  | Recall@100  | NDCG   |
++==================+========+========+============+=============+========+
+| A1               | 0.5717 | 0.0000 | 0.8171     | 0.8850      | 0.6446 |
++------------------+--------+--------+------------+-------------+--------+
+| DOC2VEC          | 0.5488 | 0.0000 | 0.8337     | 0.8337      | 0.6203 |
++------------------+--------+--------+------------+-------------+--------+
+| MINILM           | 0.6145 | 0.0000 | 0.8337     | 0.8337      | 0.6721 |
++------------------+--------+--------+------------+-------------+--------+
+| DOC2VEC IMPROV.  | -4.0%  | +0.0%  | +2.0%      | -5.8%       | -3.8%  |
++------------------+--------+--------+------------+-------------+--------+
+| MINILM IMPROV.   | +7.5%  | +0.0%  | +2.0%      | -5.8%       | +4.3%  |
++------------------+--------+--------+------------+-------------+--------+
+
+==================================================
+📊 Pipeline Complete
+==================================================
+✅ All tasks completed successfully!
+ℹ️ All output files have been saved in their respective directories
+
 **II - Running the Retrieval tasks Separately:**
 
 1. **Preprocessing Step:**
