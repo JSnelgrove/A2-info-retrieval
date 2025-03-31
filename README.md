@@ -144,7 +144,7 @@ Preprocessing is an important step in Information Retrieval (IR), ensuring that 
      ```
 
 4. **`preprocess_corpus(corpus_file, stopwords_file, output_file)`**:
-   - **Purpose:** Reads a **JSONL-formatted corpus**, processes each document’s title and text, and outputs tokenized data to a file.
+   - **Purpose:** Reads a **JSONL-formatted corpus**, processes each document's title and text, and outputs tokenized data to a file.
    - **Steps:**
      1. **Loads stopwords** using `load_stopwords()`.
      2. **Iterates through each document** in the corpus.
@@ -216,7 +216,7 @@ By constructing this **inverted index**, the system allows fast lookup of releva
 The retrieval and ranking step is responsible for returning the most relevant documents for a given query using the **BM25 ranking function**. This step involves **query preprocessing**, **query expansion**, **BM25 scoring**, and **ranking of documents**.
 
 1. **Query Preprocessing:**
-   - The user’s input query is first preprocessed using `preprocess_text()` from `preprocess.py`. This ensures consistency between document indexing and query representation.
+   - The user's input query is first preprocessed using `preprocess_text()` from `preprocess.py`. This ensures consistency between document indexing and query representation.
    - Stopword removal, stemming, and tokenization are applied to refine the query terms and improve matching efficiency.
 
 2. **Query Expansion:**
@@ -463,3 +463,153 @@ Our evaluation reveals several interesting patterns in the performance of all th
    - The selective reranking approach of MiniLM demonstrates that neural methods can significantly improve ranking quality even when applied to a subset of the initial results.
 
 In conclusion, the MiniLM neural reranking approach demonstrates superior performance in most evaluation metrics, showing the value of contextualized embeddings for capturing semantic relationships between queries and documents. However, the slightly lower recall@100 suggests that a hybrid approach combining neural reranking with traditional lexical methods might provide the most comprehensive retrieval performance.
+
+# A2 Information Retrieval Pipeline
+
+This repository contains the implementation of an information retrieval system that combines traditional BM25 ranking with neural reranking approaches (Doc2Vec and MiniLM).
+
+## Project Structure
+
+```
+.
+├── A1_BM25/                    # Assignment 1: BM25 Implementation
+│   ├── scripts/               # Python scripts for BM25
+│   └── output/                # Output files from BM25
+├── A2_Neural/                 # Assignment 2: Neural Reranking
+│   ├── doc2vec/              # Doc2Vec implementation
+│   └── minilm/               # MiniLM implementation
+├── data/                      # Data directory
+│   └── scifact/              # SciFact dataset
+└── pipeline/                  # Pipeline scripts
+    └── run_A1+A2_pipeline.py # Main pipeline script
+```
+
+## Setup
+
+1. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+2. Download the SciFact dataset and place it in the `data/scifact` directory.
+
+## Usage
+
+Run the pipeline:
+```bash
+python3 pipeline/run_A1+A2_pipeline.py
+```
+
+## Example Output
+
+Here's what the pipeline output looks like:
+
+```
+==================================================
+🚀 A2 Information Retrieval Pipeline
+==================================================
+
+What do you want to run?
+1. Run A1 (BM25) + A2 (doc2vec & LLM)
+2. Run only A2 (doc2vec & LLM)
+Enter your choice: 1
+
+==================================================
+📊 Running Assignment 1 (BM25)
+==================================================
+
+▶️ Preprocessing corpus...
+✅ Corpus preprocessed
+ℹ️ Output: A1_BM25/output/preprocessed_corpus.json
+
+▶️ Building inverted index...
+✅ Inverted index created
+ℹ️ Output: A1_BM25/output/invertedIndex.json
+
+▶️ Running retrieval and ranking...
+✅ Retrieval and ranking completed
+ℹ️ Output: A1_BM25/output/Results.txt
+
+▶️ Evaluating results...
+✅ A1 evaluation completed
+ℹ️ Output: A1_BM25/output/evaluation_summary.txt
+
+==================================================
+📊 Running Assignment 2 (Neural Reranking)
+==================================================
+
+▶️ Running doc2vec reranker...
+✅ Doc2vec reranking completed
+ℹ️ Output: A2_Neural/doc2vec/output/Results_doc2vec.txt
+ℹ️ Evaluation: A2_Neural/doc2vec/output/evaluation_results_doc2vec.txt
+
+Choose which LLM reranker to run:
+1. MiniLM (FAST – top 25 docs)
+2. MiniLM (FULL – top 100 docs)
+Enter your choice: 1
+
+⚠️ WARNING: You have chosen the FAST version (top 25 docs)
+⚠️ This version may have lower Recall@100 and Precision compared to the FULL version
+⚠️ because it reranks fewer documents. Consider using the FULL version
+⚠️ for better recall and precision metrics.
+
+ℹ️ Running FAST version (top 25 docs)
+▶️ Running MiniLM reranker...
+✅ MiniLM reranking completed
+ℹ️ Output: A2_Neural/minilm/output/Results_minilm.txt
+ℹ️ Evaluation: A2_Neural/minilm/output/evaluation_results_minilm.txt
+
+==================================================
+📊 Final Results
+==================================================
+
++------------------+--------+--------+------------+-------------+--------+
+| System           | MAP    | P@10   | Recall@20  | Recall@100  | NDCG   |
++==================+========+========+============+=============+========+
+| A1               | 0.5717 | 0.0000 | 0.8171     | 0.8850      | 0.6446 |
++------------------+--------+--------+------------+-------------+--------+
+| DOC2VEC          | 0.5488 | 0.0000 | 0.8337     | 0.8337      | 0.6203 |
++------------------+--------+--------+------------+-------------+--------+
+| MINILM           | 0.6145 | 0.0000 | 0.8337     | 0.8337      | 0.6721 |
++------------------+--------+--------+------------+-------------+--------+
+| DOC2VEC IMPROV.  | -4.0%  | +0.0%  | +2.0%      | -5.8%       | -3.8%  |
++------------------+--------+--------+------------+-------------+--------+
+| MINILM IMPROV.   | +7.5%  | +0.0%  | +2.0%      | -5.8%       | +4.3%  |
++------------------+--------+--------+------------+-------------+--------+
+
+==================================================
+📊 Pipeline Complete
+==================================================
+✅ All tasks completed successfully!
+ℹ️ All output files have been saved in their respective directories
+```
+
+## Output Files
+
+The pipeline generates several output files:
+
+### A1_BM25 Outputs
+- `preprocessed_corpus.json`: Preprocessed document collection
+- `invertedIndex.json`: Inverted index for BM25 retrieval
+- `Results.txt`: BM25 retrieval results
+- `evaluation_summary.txt`: BM25 evaluation metrics
+
+### A2_Neural Outputs
+- Doc2Vec:
+  - `Results_doc2vec.txt`: Doc2Vec reranking results
+  - `evaluation_results_doc2vec.txt`: Doc2Vec evaluation metrics
+- MiniLM:
+  - `Results_minilm.txt`: MiniLM reranking results
+  - `evaluation_results_minilm.txt`: MiniLM evaluation metrics
+
+## Results Analysis
+
+The example output shows:
+1. BM25 (A1) baseline performance
+2. Doc2Vec reranking results with a slight decrease in MAP (-4.0%) but improvement in Recall@20 (+2.0%)
+3. MiniLM reranking results showing the best overall performance with:
+   - +7.5% improvement in MAP
+   - +2.0% improvement in Recall@20
+   - +4.3% improvement in NDCG
+
+Note: The FAST version of MiniLM (top 25 docs) may show lower Recall@100 and Precision compared to the FULL version (top 100 docs).
