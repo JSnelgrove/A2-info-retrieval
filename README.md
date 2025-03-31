@@ -1,6 +1,6 @@
 # CSI4107 - Winter 2025
-## Assignment 1: Information Retrieval System
-**Due: Feb 9, 10 PM**
+## Assignment 2: Information Retrieval System
+**Due: March 30, 10 PM**
 
 ## **Group Members**
 - **Jack Snelgrove** - 300247435
@@ -8,21 +8,31 @@
 - **Eli Wynn** - 300248135
 
 ### **Task Division**
-- **Preprocessing & Stopword Removal:** Lina Moussadek
-- **Indexing & Inverted Index Construction:** Jack Snelgrove
-- **Retrieval & Ranking using BM25:** Eli Wynn
+- **Bert** Jack Snelgrove
+- **LLM** Lina Moussadeck
 - **Evaluation & Report Writing:** Lina, Jack and Eli
-- **README writeup:** Lina
+- **README writeup:** Eli Wynn
 
 ---
 
 ## **Project Overview**
-This project implements an **Information Retrieval (IR) system** using the **BM25 ranking algorithm** and **pseudo-relevance feedback** for improved query expansion. The system is designed to work with the **Scifact dataset** from the **BEIR collection**.
+This project implements an **Information Retrieval (IR) system** using a **doc2vec reranking system**, a **Mini Language Model** and the model from the previous assignment which used **BM25+Query Expansion**.
 
 ### **Functional Overview**
 1. **Preprocessing:** Tokenization, stopword removal, and stemming.
 2. **Indexing:** Construction of an inverted index with TF-IDF weighting.
 3. **Retrieval & Ranking:** BM25-based retrieval and query expansion using **WordNet synonyms** and **pseudo-relevance feedback**.
+4. **Doc2Vec Reranking:**
+   - **Doc2Vec Model:** Trained on the corpus using the `Doc2Vec` model from the `gensim` library.
+   - **Reranking:** Re-ranks the retrieved documents based on their similarity to the query using the trained Doc2Vec model.
+5. **Mini Language Model (MiniLM) Reranking:**
+   - **MiniLM Model:** Utilizes the efficient `all-MiniLM-L6-v2` transformer model from SentenceTransformers.
+   - **Neural Reranking:** Computes semantic similarity between queries and documents using dense vector representations.
+   - **Batch Processing:** Efficiently processes document batches for improved performance.
+6. **Evaluation:**
+   - **Evaluation Metrics:** Precision, Recall, F1-score, and Average Precision (AP).
+   - **Evaluation Script:** `evaluate.py`
+   - **Evaluation Results:** Comparative analysis of all three retrieval methods.
 
 The system produces a **ranked list of documents** for each query and outputs results in a **trec_eval-compatible format**.
 
@@ -33,7 +43,7 @@ The system produces a **ranked list of documents** for each query and outputs re
 - Python 3.8+
 - Required Python Libraries:
   ```bash
-  pip install nltk jsonlines
+  pip install nltk jsonlines pytrec_eval gensim
   ```
 - Download and set up NLTK resources:
   ```python
@@ -72,12 +82,30 @@ The system produces a **ranked list of documents** for each query and outputs re
    - **Input:** `queries.jsonl`, `invertedIndex.json`
    - **Output:** `Results.txt`
 
-4. **Evaluation:**
-   ```bash
-   wsl
-   python3 evaluate.py
+4. **Doc2Vec Reranking Step:**
+   - **Training the Model:**
+     ```bash
+     python doc2vec_reranking.py
+     ```
+    - **Input:** `preprocessed_corpus.json`, `results.txt`
+    - **Output:** `doc2vec_results.txt`
    ```
 
+5. **Mini Language Model (LLM) Step:**
+   ```bash
+   neural_rerank_minilm.py
+   ```
+   - **Input:** `preprocessed_corpus.json`, `results.txt`
+   - **Output:** `Results_neural_minilm.txt`
+
+6. **Evaluation Step (retrievalAndRanking):**
+   - **Evaluation Script:** `evaluate.py`
+   - **Input:** `Results.txt`
+   - **Output:** Evaluation metrics (Precision, Recall, F1-score, and Average Precision (AP)).
+
+7. **Evaluation Step (Full Pipeline):**
+   - **Evaluation Script:** 'run_pipeline.py'
+   - **Output:** Evaluation metrics (Precision, Recall, F1-score, and Average Precision (AP)) for all 3 retrieval techniques.
 ---
 
 ## **Algorithmic Implementation**
@@ -226,6 +254,91 @@ The retrieval and ranking step is responsible for returning the most relevant do
   - Sorted list used to return top-ranked results efficiently.
 
 ---
+### **Step 4: Doc2Vec Reranking**
+#### **Algorithm**
+The Doc2Vec reranking system is designed to enhance the relevance of search results by considering the semantic similarity between documents and queries. This approach aims to improve the accuracy of information retrieval by considering the context and meaning of documents that term-based methods might miss.
+1. **Document Embedding Generation:**
+   - Uses Gensim's Doc2Vec model to create vector representations of documents.
+   - Each document is represented as a dense vector in a high-dimensional space.
+   - Documents with similar semantic content are positioned closer in this vector space.
+2. **Query Embedding:**
+   - Transforms the query into the same vector space as the documents.
+   - This allows for direct comparison between query intent and document content.
+3. **Similarity Calculation:**
+   - Computes cosine similarity between the query vector and document vectors.
+   - Higher similarity scores indicate stronger semantic relevance.
+4. **Hybrid Ranking:**
+   - Combines the original BM25 scores with Doc2Vec similarity scores.
+   - A weighted approach balances lexical matching (BM25) with semantic matching (Doc2Vec).
+   - The final ranking reflects both exact term matches and conceptual relevance. Data Structure
+
+#### **Data Structure**   
+- **Document Vectors:**
+  - Dense numerical arrays representing semantic content.
+- **Similarity Matrix:**
+  - Stores cosine similarity scores between query and documents.
+
+---
+
+### **Step 5: MiniLM Neural Reranking**
+#### **Algorithm**
+The MiniLM neural reranking component leverages transformer-based language models to capture deep semantic relationships between queries and documents. This approach goes beyond traditional lexical matching and Doc2Vec by utilizing contextualized embeddings from a pre-trained language model.
+
+1. **Model Initialization:**
+   - Loads the `all-MiniLM-L6-v2` model, a lightweight and efficient transformer model from the SentenceTransformers library.
+   - This model is a distilled version of BERT, offering a good balance between performance and efficiency.
+   - Example:
+     ```python
+     model = SentenceTransformer('all-MiniLM-L6-v2')
+     ```
+
+2. **Document and Query Encoding:**
+   - Transforms both queries and documents into dense vector representations in a high-dimensional semantic space.
+   - Uses the model's encoding capabilities to capture contextual meaning:
+     ```python
+     query_embedding = model.encode(query, convert_to_tensor=True)
+     doc_embeddings = model.encode(doc_texts, convert_to_tensor=True, batch_size=16)
+     ```
+   - **Batch Processing:** Processes documents in batches of 16 for improved efficiency.
+
+3. **Semantic Similarity Calculation:**
+   - Computes cosine similarity between the query embedding and each document embedding.
+   - This measures the semantic closeness of documents to the query in the embedding space.
+   - Higher similarity scores indicate stronger semantic relevance.
+   - Example:
+     ```python
+     similarities = util.cos_sim(query_embedding, doc_embeddings)[0]
+     ```
+
+4. **Selective Reranking:**
+   - For efficiency, only reranks the top-K documents (default K=25) from the initial BM25 results.
+   - This hybrid approach combines the efficiency of traditional retrieval with the effectiveness of neural reranking.
+   - The approach significantly reduces computational overhead while maintaining high-quality results.
+
+5. **Result Generation:**
+   - Sorts documents by their semantic similarity scores.
+   - Outputs the reranked results in TREC format for evaluation.
+   - Example output format:
+     ```
+     1 Q0 doc123 1 0.9876 MiniLM
+     1 Q0 doc456 2 0.8765 MiniLM
+     ```
+
+#### **Data Structure**
+- **Document Embeddings:**
+  - Dense vectors (typically 384-dimensional for MiniLM-L6) representing the semantic content of documents.
+- **Query Embeddings:**
+  - Dense vectors in the same semantic space as document embeddings.
+- **Similarity Matrix:**
+  - Stores cosine similarity scores between query and document embeddings.
+
+#### **Optimizations**
+- **Selective Reranking:** Only reranks the top-K documents from BM25 results to balance effectiveness and efficiency.
+- **Batch Processing:** Encodes documents in batches to leverage GPU parallelism and reduce processing time.
+- **Tensor Operations:** Uses PyTorch tensor operations for efficient similarity calculations.
+- **Pre-trained Model:** Leverages a distilled transformer model that offers a good balance between size and performance.
+
+---
 
 ## **Evaluation & Results**
 ### **Vocabulary Size**
@@ -237,6 +350,8 @@ The retrieval and ranking step is responsible for returning the most relevant do
 ```
 
 #### **First 10 Results for Queries 1 & 3**
+
+**BM25+QueryExpansion Results:**
 | Query ID | Q0 | Document ID | Rank | Score  | Run Name               |
 |----------|----|------------|------|--------|------------------------|
 | 1        | Q0 | 21257564   | 1    | 9.7562 | BM25+QueryExpansion    |
@@ -260,16 +375,91 @@ The retrieval and ranking step is responsible for returning the most relevant do
 | 3        | Q0 | 19058822   | 9    | 22.2002 | BM25+QueryExpansion   |
 | 3        | Q0 | 43334921   | 10   | 21.3640 | BM25+QueryExpansion   |
 
-Query expansion using pseudo-relevance feedback (PRF) and WordNet improved recall but may introduce noise. The top-ranked documents for Query 1 had closely clustered scores, indicating strong relevance, while Query 3 showed high term matching being almost triple the highest match to query 1. While the system effectively retrieves relevant results, PRF and synonym weighting could be refined to reduce irrelevant matches.
+**Doc2Vec Results:**
+| Query ID | Q0 | Document ID | Rank | Score  | Run Name |
+|----------|----|------------|------|--------|----------|
+| 1        | Q0 | 21257564   | 1    | 0.7497 | Doc2Vec  |
+| 1        | Q0 | 18953920   | 2    | 0.7005 | Doc2Vec  |
+| 1        | Q0 | 36480032   | 3    | 0.6286 | Doc2Vec  |
+| 1        | Q0 | 7581911    | 4    | 0.6008 | Doc2Vec  |
+| 1        | Q0 | 21456232   | 5    | 0.5360 | Doc2Vec  |
+| 1        | Q0 | 37949139   | 6    | 0.5313 | Doc2Vec  |
+| 1        | Q0 | 4435369    | 7    | 0.5171 | Doc2Vec  |
+| 1        | Q0 | 17388232   | 8    | 0.5003 | Doc2Vec  |
+| 1        | Q0 | 3845894    | 9    | 0.5001 | Doc2Vec  |
+| 1        | Q0 | 20155713   | 10   | 0.4869 | Doc2Vec  |
+| 3        | Q0 | 2739854    | 1    | 0.8229 | Doc2Vec  |
+| 3        | Q0 | 4414547    | 2    | 0.7817 | Doc2Vec  |
+| 3        | Q0 | 4632921    | 3    | 0.7750 | Doc2Vec  |
+| 3        | Q0 | 23389795   | 4    | 0.7042 | Doc2Vec  |
+| 3        | Q0 | 4378885    | 5    | 0.6943 | Doc2Vec  |
+| 3        | Q0 | 1067605    | 6    | 0.6433 | Doc2Vec  |
+| 3        | Q0 | 2107238    | 7    | 0.6133 | Doc2Vec  |
+| 3        | Q0 | 461550     | 8    | 0.5633 | Doc2Vec  |
+| 3        | Q0 | 13519661   | 9    | 0.5585 | Doc2Vec  |
+| 3        | Q0 | 41782935   | 10   | 0.5443 | Doc2Vec  |
 
-### **Mean Average Precision (MAP)**
-- **MAP Score:** **0.5717**
-- **Precision @ 10:** **0.0833**
-- **Recall @ 20:** **0.8171**
-- **Recall @ 100:** **0.8850**
-- **NDCG:** **0.6446**
+**MiniLM Neural Reranking Results:**
+| Query ID | Q0 | Document ID | Rank | Score  | Run Name |
+|----------|----|------------|------|--------|----------|
+| 0        | Q0 | 4435369    | 1    | 0.1812 | MiniLM   |
+| 0        | Q0 | 825728     | 2    | 0.1636 | MiniLM   |
+| 0        | Q0 | 7581911    | 3    | 0.1587 | MiniLM   |
+| 0        | Q0 | 18953920   | 4    | 0.1281 | MiniLM   |
+| 0        | Q0 | 11335860   | 5    | 0.1219 | MiniLM   |
+| 0        | Q0 | 20155713   | 6    | 0.1191 | MiniLM   |
+| 0        | Q0 | 3566945    | 7    | 0.1059 | MiniLM   |
+| 0        | Q0 | 2566674    | 8    | 0.0963 | MiniLM   |
+| 0        | Q0 | 23244529   | 9    | 0.0949 | MiniLM   |
+| 0        | Q0 | 13231899   | 10   | 0.0928 | MiniLM   |
+| 2        | Q0 | 13734012   | 1    | 0.4169 | MiniLM   |
+| 2        | Q0 | 18617259   | 2    | 0.3365 | MiniLM   |
+| 2        | Q0 | 76415938   | 3    | 0.3033 | MiniLM   |
+| 2        | Q0 | 11880289   | 4    | 0.2535 | MiniLM   |
+| 2        | Q0 | 1292369    | 5    | 0.2523 | MiniLM   |
+| 2        | Q0 | 103007     | 6    | 0.2435 | MiniLM   |
+| 2        | Q0 | 17333231   | 7    | 0.2367 | MiniLM   |
+| 2        | Q0 | 18340282   | 8    | 0.2341 | MiniLM   |
+| 2        | Q0 | 19140422   | 9    | 0.2334 | MiniLM   |
+| 2        | Q0 | 4828631    | 10   | 0.2236 | MiniLM   |
 
-## **References**
-- BEIR Collection: [https://beir.ai/](https://beir.ai/)
-- Scifact Dataset Paper: [https://arxiv.org/abs/2004.14974](https://arxiv.org/abs/2004.14974)
-- TREC Eval: [https://github.com/usnistgov/trec_eval](https://github.com/usnistgov/trec_eval)
+### **Performance Comparison**
+
+| Metric       | BM25+QueryExpansion | Doc2Vec | MiniLM Neural Reranking |
+|--------------|---------------------|---------|-------------------------|
+| NDCG         | 0.6446              | 0.6379  | 0.6601                  |
+| P_10         | 0.0833              | 0.0820  | 0.0897                  |
+| MAP          | 0.5717              | 0.5621  | 0.6029                  |
+| Recall_20    | 0.8171              | 0.8049  | 0.8216                  |
+| Recall_100   | 0.8850              | 0.8850  | 0.8232                  |
+
+### **Discussion of Results**
+
+Our evaluation reveals several interesting patterns in the performance of all three retrieval methods:
+
+1. **Comparison of Approaches:**
+   - **MiniLM Neural Reranking** achieved the best overall performance with a MAP of **0.6029**, outperforming both BM25+QueryExpansion (0.5717) and Doc2Vec (0.5621).
+   - The NDCG scores show that MiniLM (0.6601) places relevant documents at better positions in the ranking compared to BM25 (0.6446) and Doc2Vec (0.6379).
+   - While BM25 and Doc2Vec achieved identical Recall@100 (0.8850), MiniLM showed a slightly lower recall (0.8232), suggesting it might miss some relevant documents that the other methods find.
+
+2. **Score Distribution:**
+   - The scoring mechanisms differ significantly between methods:
+     - BM25 scores range from ~6 to ~32
+     - Doc2Vec scores range from ~0.48 to ~0.82
+     - MiniLM scores vary widely, with some even being negative, ranging from -0.0736 to 0.7991
+
+3. **Ranking Differences:**
+   - For Query 1 (shown as Query 0 in MiniLM results), MiniLM ranks document 4435369 first, which appears as 7th in Doc2Vec results but doesn't appear in BM25's top 10.
+   - This suggests that MiniLM captures semantic relationships that aren't evident in the lexical matching of BM25.
+   - The neural methods show different ranking patterns, indicating they're capturing different aspects of semantic relevance.
+
+4. **Performance Metrics:**
+   - **Precision@10** is highest for MiniLM (0.0897) compared to BM25 (0.0833) and Doc2Vec (0.0820), suggesting that neural reranking places more relevant documents in the top 10 results.
+   - **Recall@20** is highest for MiniLM (0.8216), followed closely by BM25 (0.8171) and then Doc2Vec (0.8049).
+   - The lower Recall@100 for MiniLM suggests a potential trade-off: while it ranks the most relevant documents higher, it might miss some marginally relevant documents that lexical methods can find.
+
+5. **Efficiency vs. Effectiveness:**
+   - While MiniLM provides the best performance in terms of precision and ranking quality, the difference in recall@100 suggests that a hybrid approach combining the strengths of both neural and lexical methods might yield the best overall performance.
+   - The selective reranking approach of MiniLM demonstrates that neural methods can significantly improve ranking quality even when applied to a subset of the initial results.
+
+In conclusion, the MiniLM neural reranking approach demonstrates superior performance in most evaluation metrics, showing the value of contextualized embeddings for capturing semantic relationships between queries and documents. However, the slightly lower recall@100 suggests that a hybrid approach combining neural reranking with traditional lexical methods might provide the most comprehensive retrieval performance.
