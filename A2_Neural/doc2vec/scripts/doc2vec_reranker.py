@@ -7,12 +7,12 @@ from gensim.utils import simple_preprocess
 import pytrec_eval
 
 # File paths
-CORPUS_FILE = "../scifact/corpus.jsonl"
+CORPUS_FILE = os.path.join(root_dir, "data/scifact/corpus.jsonl")
 QUERIES_FILE = "../scifact/queries.jsonl"
-BM25_RESULTS_FILE = "../output/Results.txt"
+BM25_RESULTS_FILE = "../../../A1_BM25/output/Results.txt"
 DOC2VEC_MODEL_FILE = "../output/doc2vec_model.model"
-DOC2VEC_RESULTS_FILE = "../output/Results_doc2vec.txt"
-EVAL_OUTPUT_FILE = "../output/evaluation_results_doc2vec.txt"
+DOC2VEC_RESULTS_FILE = os.path.join(doc2vec_dir, "output/Results_doc2vec.txt")
+EVAL_OUTPUT_FILE = os.path.join(doc2vec_dir, "output/evaluation_results_doc2vec.txt")
 GROUND_TRUTH_FILE = "../scifact/qrels/test.tsv"
 
 # Blending ratio between BM25 and Doc2Vec scores
@@ -109,6 +109,20 @@ def evaluate_results(ground_truth_file, result_file, output_eval_file):
     print(f"\n📁 Saved to: {output_eval_file}")
 
 if __name__ == "__main__":
+    # Setup paths
+    root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    a1_dir = os.path.join(root_dir, "A1_BM25")
+    doc2vec_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+    # Define file paths
+    CORPUS_FILE = os.path.join(root_dir, "data/scifact/corpus.jsonl")
+    BM25_RESULTS = os.path.join(a1_dir, "output/Results.txt")
+    OUTPUT_FILE = os.path.join(doc2vec_dir, "output/Results_doc2vec.txt")
+    EVAL_OUTPUT = os.path.join(doc2vec_dir, "output/evaluation_results_doc2vec.txt")
+    # Setup paths
+    root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    a1_dir = os.path.join(root_dir, "A1_BM25")
+    doc2vec_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     print("📥 Loading corpus...")
     tagged_documents = load_corpus(CORPUS_FILE)
 

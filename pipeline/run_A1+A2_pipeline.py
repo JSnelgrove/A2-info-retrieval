@@ -2,24 +2,36 @@ import subprocess
 import os
 from tabulate import tabulate
 
+# Get absolute paths
+base_dir = os.path.dirname(os.path.abspath(__file__))
+root_dir = os.path.dirname(base_dir)
+
 # Paths
 scripts = {
     "A1": [
-        "A1_BM25/scripts/preprocess.py",
-        "A1_BM25/scripts/invertedIndex.py",
-        "A1_BM25/scripts/retrievalAndRanking.py",
-        "A1_BM25/scripts/evaluate.py"
+        os.path.join(root_dir, "A1_BM25/scripts/preprocess.py"),
+        os.path.join(root_dir, "A1_BM25/scripts/invertedIndex.py"),
+        os.path.join(root_dir, "A1_BM25/scripts/retrievalAndRanking.py"),
+        os.path.join(root_dir, "A1_BM25/scripts/evaluate.py")
     ],
-    "doc2vec": ["A2_Neural/doc2vec/scripts/doc2vec_reranker.py"],
-    "minilm_short": ["A2_Neural/minilm/scripts/neural_rerank_minilm.py", "--top_k=25"],
-    "minilm_long": ["A2_Neural/minilm/scripts/neural_rerank_minilm.py", "--top_k=100"]
+    "doc2vec": [
+        os.path.join(root_dir, "A2_Neural/doc2vec/scripts/doc2vec_reranker.py")
+    ],
+    "minilm_short": [
+        os.path.join(root_dir, "A2_Neural/minilm/scripts/neural_rerank_minilm.py"),
+        "--top_k=25"
+    ],
+    "minilm_long": [
+        os.path.join(root_dir, "A2_Neural/minilm/scripts/neural_rerank_minilm.py"),
+        "--top_k=100"
+    ]
 }
 
 # Result files and tags
 results = {
-    "A1": "A1_BM25/output/evaluation_summary.txt",
-    "doc2vec": "A2_Neural/doc2vec/output/evaluation_results_doc2vec.txt",
-    "minilm": "A2_Neural/minilm/output/evaluation_results_minilm.txt"
+    "A1": os.path.join(root_dir, "A1_BM25/output/evaluation_summary.txt"),
+    "doc2vec": os.path.join(root_dir, "A2_Neural/doc2vec/output/evaluation_results_doc2vec.txt"),
+    "minilm": os.path.join(root_dir, "A2_Neural/minilm/output/evaluation_results_minilm.txt")
 }
 
 # Prompt

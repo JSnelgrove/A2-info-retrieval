@@ -69,6 +69,9 @@ def evaluate_results(relevance_file, results_file):
     return average_scores
 
 if __name__ == "__main__":
+    # Setup paths
+    root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    a1_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     # Count unique terms in corpus
     preprocessed_corpus_file = "../output/preprocessed_corpus.json"
     num_terms, sample_tokens = count_unique_terms(preprocessed_corpus_file)
@@ -97,7 +100,7 @@ if __name__ == "__main__":
     evaluation_doc2vec = evaluate_results(relevance_file, doc2vec_results_file)
 
     # Save combined evaluation summary to a file
-    with open("../output/evaluation_summary.txt", "w") as f:
+    with open(os.path.join(a1_dir, "output/evaluation_summary.txt"), "w") as f:
         f.write(f"Total unique terms: {num_terms}\n")
         f.write(f"Sample 100 Tokens: {sample_tokens}\n\n")
         f.write("Baseline Results (First 10 for Queries 1 & 3):\n")

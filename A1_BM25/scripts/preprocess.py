@@ -1,5 +1,7 @@
 import json
 import re
+import os
+import os
 from nltk.stem import PorterStemmer
 
 def load_stopwords(stopwords_file):
@@ -37,5 +39,13 @@ def preprocess_corpus(corpus_file, stopwords_file, output_file):
         json.dump(preprocessed_data, f)
 
 if __name__ == "__main__":
-    preprocess_corpus("../scifact/corpus.jsonl", "../stopwords.txt", "../output/preprocessed_corpus.json")
-    print("Preprocessing complete. Output saved to ../output/preprocessed_corpus.json")
+    # Setup paths
+    root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    a1_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+    preprocess_corpus(
+        os.path.join(root_dir, "data/scifact/corpus.jsonl"),
+        os.path.join(root_dir, "data/stopwords.txt"),
+        os.path.join(a1_dir, "output/preprocessed_corpus.json")
+    )
+    print(f"Preprocessing complete. Output saved to {os.path.join(a1_dir, 'output/preprocessed_corpus.json')}")

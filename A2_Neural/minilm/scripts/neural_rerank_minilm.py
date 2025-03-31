@@ -1,5 +1,6 @@
 import json
 import numpy as np
+import os
 from sentence_transformers import SentenceTransformer, util
 from collections import defaultdict
 import pytrec_eval
@@ -75,7 +76,7 @@ def rerank_with_minilm(bm25_results, queries, corpus, output_file, top_k=25):
     print(f"\n✅ Reranked results written to {output_file}")
 
 # Evaluation with pytrec_eval
-def evaluate_results(relevance_file, results_file):
+def evaluate_results(relevance_file, results_file, output_file):
     def load_relevance(file_path):
         relevance = {}
         with open(file_path, "r") as f:
@@ -124,26 +125,38 @@ def evaluate_results(relevance_file, results_file):
     for metric, score in average_scores.items():
         print(f"{metric}: {score:.4f}")
 
-    with open("../output/evaluation_results_minilm.txt", "w") as f:
+    with open(output_file, "w") as f:
         for metric, score in average_scores.items():
             f.write(f"{metric}: {score:.4f}\n")
 
-    print("📁 Evaluation saved to output/evaluation_results_minilm.txt")
+    print(f"📁 Evaluation saved to {output_file}")
 
 # Run pipeline
 if __name__ == "__main__":
+    # Setup paths
+    root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    a1_dir = os.path.join(root_dir, "A1_BM25")
+    minilm_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+    # Define file paths
+    CORPUS_FILE = os.path.join(root_dir, "data/scifact/corpus.jsonl")
+    QUERIES_FILE = os.path.join(root_dir, "data/scifact/queries.jsonl")
+    QRELS_FILE = os.path.join(root_dir, "data/scifact/qrels/test.tsv")
+    BM25_RESULTS = os.path.join(a1_dir, "output/Results.txt")
+    OUTPUT_FILE = os.path.join(minilm_dir, "output/Results_neural_minilm.txt")
+    EVAL_OUTPUT = os.path.join(minilm_dir, "output/evaluation_results_minilm.txt")
+
     # Load data
     print("🚀 Loading data...")
-    bm25_results = load_bm25_results("../output/Results.txt")
-    queries = load_queries("../scifact/queries.jsonl")
-    corpus = load_corpus("../scifact/corpus.jsonl")
+    bm25_results = load_bm25_results(BM25_RESULTS)
+    queries = load_queries(QUERIES_FILE)
+    corpus = load_corpus(CORPUS_FILE)
     
     # Re-rank with MiniLM
     print("⚡ Re-ranking top 25 docs per query with MiniLM...")
-    output_file = "../output/Results_neural_minilm.txt"
-    rerank_with_minilm(bm25_results, queries, corpus, output_file)
+    rerank_with_minilm(bm25_results, queries, corpus, OUTPUT_FILE)
     
     # Evaluate results
     print("📈 Evaluating MiniLM results...")
-    evaluate_results("../scifact/qrels/test.tsv", output_file)
+    evaluate_results(QRELS_FILE, OUTPUT_FILE, EVAL_OUTPUT)
 

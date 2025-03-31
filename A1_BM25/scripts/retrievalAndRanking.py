@@ -1,5 +1,6 @@
 import json
 import math
+import os
 import re
 from collections import defaultdict
 from nltk.corpus import wordnet
@@ -76,8 +77,11 @@ def load_inverted_index(index_file):
     return data["index"], data["doc_lengths"], data["idf"]
 
 if __name__ == "__main__":
-    index_file = "../output/invertedIndex.json"
-    query_file = "../scifact/queries.jsonl"
+    # Setup paths
+    root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    a1_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    index_file = os.path.join(a1_dir, "output/invertedIndex.json")
+    query_file = "../../data/scifact/queries.jsonl"
     stopwords_file = "../stopwords.txt"
     output_file = "../output/Results_hybrid.txt"
 
