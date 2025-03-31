@@ -59,66 +59,6 @@ The system produces a **ranked list of documents** for each query and outputs re
    wsl
    python3 pipeline_runner.py
    ```
-Output of the pipeline: 
-==================================================
-🚀 A2 Information Retrieval Pipeline
-==================================================
-
-What do you want to run?
-1. Run A1 (BM25) + A2 (doc2vec & LLM)
-2. Run only A2 (doc2vec & LLM)
-Enter your choice: 1
-
-==================================================
-📊 Running Assignment 1 (BM25)
-==================================================
-
-▶️ Preprocessing corpus...
-✅ Corpus preprocessed
-ℹ️ Output: A1_BM25/output/preprocessed_corpus.json
-
-▶️ Building inverted index...
-✅ Inverted index created
-ℹ️ Output: A1_BM25/output/invertedIndex.json
-
-[...]
-
-Choose which LLM reranker to run:
-1. MiniLM (FAST – top 25 docs)
-2. MiniLM (FULL – top 100 docs)
-Enter your choice: 1
-
-⚠️ WARNING: You have chosen the FAST version (top 25 docs)
-⚠️ This version may have lower Recall@100 and Precision compared to the FULL version
-⚠️ because it reranks fewer documents. Consider using the FULL version
-⚠️ for better recall and precision metrics.
-
-ℹ️ Running FAST version (top 25 docs)
-▶️ Running MiniLM reranker...
-✅ MiniLM reranking completed
-ℹ️ Output: A2_Neural/minilm/output/Results_minilm.txt
-ℹ️ Evaluation: A2_Neural/minilm/output/evaluation_results_minilm.txt
-
-+------------------+--------+--------+------------+-------------+--------+
-| System           | MAP    | P@10   | Recall@20  | Recall@100  | NDCG   |
-+==================+========+========+============+=============+========+
-| A1               | 0.5717 | 0.0000 | 0.8171     | 0.8850      | 0.6446 |
-+------------------+--------+--------+------------+-------------+--------+
-| DOC2VEC          | 0.5488 | 0.0000 | 0.8337     | 0.8337      | 0.6203 |
-+------------------+--------+--------+------------+-------------+--------+
-| MINILM           | 0.6145 | 0.0000 | 0.8337     | 0.8337      | 0.6721 |
-+------------------+--------+--------+------------+-------------+--------+
-| DOC2VEC IMPROV.  | -4.0%  | +0.0%  | +2.0%      | -5.8%       | -3.8%  |
-+------------------+--------+--------+------------+-------------+--------+
-| MINILM IMPROV.   | +7.5%  | +0.0%  | +2.0%      | -5.8%       | +4.3%  |
-+------------------+--------+--------+------------+-------------+--------+
-
-==================================================
-📊 Pipeline Complete
-==================================================
-✅ All tasks completed successfully!
-ℹ️ All output files have been saved in their respective directories
-
 **II - Running the Retrieval tasks Separately:**
 
 1. **Preprocessing Step:**
@@ -538,31 +478,15 @@ This repository contains the implementation of an information retrieval system t
 ├── A2_Neural/                 # Assignment 2: Neural Reranking
 │   ├── doc2vec/              # Doc2Vec implementation
 │   └── minilm/               # MiniLM implementation
-├── data/                      # Data directory
+├── data/                      # Data files
 │   └── scifact/              # SciFact dataset
 └── pipeline/                  # Pipeline scripts
     └── run_A1+A2_pipeline.py # Main pipeline script
 ```
 
-## Setup
+## Example Pipeline Output
 
-1. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-2. Download the SciFact dataset and place it in the `data/scifact` directory.
-
-## Usage
-
-Run the pipeline:
-```bash
-python3 pipeline/run_A1+A2_pipeline.py
-```
-
-## Example Output
-
-Here's what the pipeline output looks like:
+When you run the pipeline, you'll see output similar to this:
 
 ```
 ==================================================
@@ -649,27 +573,37 @@ Enter your choice: 1
 The pipeline generates several output files:
 
 ### A1_BM25 Outputs
-- `preprocessed_corpus.json`: Preprocessed document collection
+- `preprocessed_corpus.json`: Preprocessed version of the corpus
 - `invertedIndex.json`: Inverted index for BM25 retrieval
 - `Results.txt`: BM25 retrieval results
-- `evaluation_summary.txt`: BM25 evaluation metrics
+- `evaluation_summary.txt`: Evaluation metrics for BM25
 
 ### A2_Neural Outputs
-- Doc2Vec:
-  - `Results_doc2vec.txt`: Doc2Vec reranking results
-  - `evaluation_results_doc2vec.txt`: Doc2Vec evaluation metrics
-- MiniLM:
-  - `Results_minilm.txt`: MiniLM reranking results
-  - `evaluation_results_minilm.txt`: MiniLM evaluation metrics
+#### Doc2Vec
+- `Results_doc2vec.txt`: Doc2Vec reranking results
+- `evaluation_results_doc2vec.txt`: Evaluation metrics for Doc2Vec
 
-## Results Analysis
+#### MiniLM
+- `Results_minilm.txt`: MiniLM reranking results
+- `evaluation_results_minilm.txt`: Evaluation metrics for MiniLM
 
-The example output shows:
-1. BM25 (A1) baseline performance
-2. Doc2Vec reranking results with a slight decrease in MAP (-4.0%) but improvement in Recall@20 (+2.0%)
-3. MiniLM reranking results showing the best overall performance with:
-   - +7.5% improvement in MAP
-   - +2.0% improvement in Recall@20
-   - +4.3% improvement in NDCG
+## Usage
 
-Note: The FAST version of MiniLM (top 25 docs) may show lower Recall@100 and Precision compared to the FULL version (top 100 docs).
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Run the pipeline:
+   ```bash
+   cd pipeline
+   python3 run_A1+A2_pipeline.py
+   ```
+
+## Notes
+
+- The pipeline offers two options for MiniLM reranking:
+  - FAST version (top 25 docs): Faster but may have lower recall
+  - FULL version (top 100 docs): Slower but better recall and precision
+- All output files are saved in their respective directories under `output/`
+- The final results table shows improvements over the baseline BM25 system
