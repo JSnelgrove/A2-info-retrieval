@@ -57,7 +57,7 @@ The system produces a **ranked list of documents** for each query and outputs re
 **I - Running the Pipeline altogether:**
    ```bash
    wsl
-   python3 run_pipeline.py
+   python3 pipeline_runner.py
    ```
 **II - Running the Retrieval tasks Separately:**
 
@@ -104,7 +104,7 @@ The system produces a **ranked list of documents** for each query and outputs re
    - **Output:** Evaluation metrics (Precision, Recall, F1-score, and Average Precision (AP)).
 
 7. **Evaluation Step (Full Pipeline):**
-   - **Evaluation Script:** 'run_pipeline.py'
+   - **Evaluation Script:** 'pipeline_runner.py'
    - **Output:** Evaluation metrics (Precision, Recall, F1-score, and Average Precision (AP)) for all 3 retrieval techniques.
 ---
 
